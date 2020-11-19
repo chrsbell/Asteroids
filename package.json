@@ -7,9 +7,9 @@
   "author": "Chris Bell",
   "license": "ISC",
   "scripts": {
-    "clean": "rm dist/bundle.js",
+    "clean": "rm -rf dist/*",
     "build-dev": "npx webpack --mode development --watch",
-    "build-prod": "webpack --mode production",
+    "build-prod": "npx webpack --mode production",
     "start": "node server/index.js"
   },
   "dependencies": {

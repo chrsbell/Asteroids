@@ -6,7 +6,8 @@ import Ship from './Ship.jsx';
 
 const App = () => {
   const Input = new Controller();
-  return <Ship />;
+  const PlayerShip = new Ship();
+  return PlayerShip;
 };
 
 ReactDOM.render(<App />, document.getElementById('app'));
