@@ -1,15 +1,12 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import Controller from './Controller';
-import Ship from './Ship';
+import Controller from './Controller.js';
+import Ship from './Ship.jsx';
 
 const App = () => {
   const Input = new Controller();
-  return (
-    <div className="app">
-      <Ship />
-    </div>
-  );
+  return <Ship />;
 };
 
-export default App;
+ReactDOM.render(<App />, document.getElementById('app'));
