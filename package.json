@@ -14,9 +14,11 @@
     "serve": "webpack serve --hot --mode development"
   },
   "dependencies": {
+    "@types/mathjs": "^6.0.7",
     "express": "^4.17.1",
     "html-webpack-template": "^6.2.0",
     "jquery": "^3.5.1",
+    "mathjs": "^8.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-hot-loader": "^4.13.0",
