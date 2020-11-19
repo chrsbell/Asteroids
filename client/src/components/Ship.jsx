@@ -14,6 +14,7 @@ const Ship = function () {
   // base class constructor
   GameObject.call(this, vertices);
   const loopRotate = () => {
+    this.translate(0.001, 0.001);
     this.rotate(this.rotation.current + Math.PI / 1000);
     setTimeout(loopRotate, 10);
   };
