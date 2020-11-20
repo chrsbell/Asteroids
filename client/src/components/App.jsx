@@ -1,13 +1,18 @@
 import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import styled from 'styled-components';
 import Controller from './Controller.js';
 import Ship from './Ship.jsx';
 
 const App = () => {
-  const Input = new Controller();
-  const PlayerShip = new Ship();
-  return PlayerShip;
+  const [PlayerShip, PlayerShipRender] = new Ship();
+  const Input = new Controller({
+    mousemove: [PlayerShip.rotateToCursor.bind(PlayerShip)],
+    mousedown: [],
+    mouseup: [],
+    keypress: [],
+    keyup: [],
+  });
+  return PlayerShipRender;
 };
 
 ReactDOM.render(<App />, document.getElementById('app'));

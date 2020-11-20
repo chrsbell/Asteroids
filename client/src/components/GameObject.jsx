@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { matrix, multiply, add, cos, sin, identity, zeros } from 'mathjs';
 
+// game objects should be able to wrap around screen
+
 // functional prototype class for all game objects
-var GameObject = function (vertices) {
+const GameObject = function (vertices) {
   this.vertices = matrix(vertices);
   // the transformed coordinates
   this.transformation = useRef(this.vertices);
@@ -75,7 +77,7 @@ GameObject.prototype.calcTransformationMatrix = function () {
 GameObject.prototype.render = function () {
   this.calcTransformationMatrix();
   return (
-    <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
       <polygon points={this.getSVGCoords()} fill="none" stroke="black" />
     </svg>
   );
