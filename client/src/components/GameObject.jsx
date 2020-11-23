@@ -42,14 +42,9 @@ GameObject.prototype.translate = function (offsetX, offsetY) {
   const newPosX = this.position.current[0] + offsetX;
   const newPosY = this.position.current[1] + offsetY;
   this.position.current = [newPosX, newPosY];
-  this.setTranslationMatrix(
-    matrix([
-      [newPosX, newPosY, 1],
-      [newPosX, newPosY, 1],
-      [newPosX, newPosY, 1],
-      [newPosX, newPosY, 1],
-    ])
-  );
+  const numRows = this.vertices.size()[0];
+  // create a rows of new position coordinates
+  this.setTranslationMatrix(matrix([...Array(numRows).keys()].map((row) => [newPosX, newPosY, 1])));
 };
 
 // set the absolute position of the game object
@@ -63,7 +58,10 @@ GameObject.prototype.setAbsolutePosition = function (posX, posY) {
 // return the coordinates of the svg in polygon point format
 GameObject.prototype.getSVGCoords = function () {
   // could use a regex here
-  const formatted = subset(this.transformation.current, index([0, 1, 2], [0, 1]));
+  const formatted = subset(
+    this.transformation.current,
+    index([...Array(this.vertices.size()[0]).keys()], [0, 1])
+  );
   let svgCoords = formatted.format().replaceAll('],', '');
   svgCoords = svgCoords.replaceAll('[', '');
   svgCoords = svgCoords.replaceAll(']', '');
