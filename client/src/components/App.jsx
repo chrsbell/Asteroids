@@ -15,21 +15,11 @@ const initialGameState = {
 const reducer = (state, action) => {
   switch (action.type) {
     case 'asteroid':
-      return {
-        ...state,
-        objects: {
-          ...state.objects,
-          asteroids: [...state.asteroids, action.asteroid],
-        },
-      };
+      state.objects.asteroids.push(action.asteroid);
+      return state;
     case 'player':
-      return {
-        ...state,
-        objects: {
-          ...state.objects,
-          player: action.player,
-        },
-      };
+      state.objects.player = action.player;
+      return state;
   }
 };
 
