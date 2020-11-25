@@ -1,22 +1,15 @@
 import $ from 'jquery';
 
-export default class Controller {
-  constructor(callbacks) {
-    $(window).on('mousemove', (e) => {
-      // prevent event from triggering multiple times
-      e.stopImmediatePropagation();
-      e.preventDefault();
-      callbacks['mousemove'].forEach((callback) => {
-        callback(e);
-      });
-    });
+class Controller {
+  constructor() {
+    this.callbacks = { mousemove: [] };
+    /*
     $(window).on('mousedown', (e) => {
       e.stopImmediatePropagation();
       e.preventDefault();
       callbacks['mousedown'].forEach((callback) => {
         callback(e);
       });
-      console.log('Mouse pressed!');
     });
     $(window).on('mouseup', (e) => {
       e.stopImmediatePropagation();
@@ -24,7 +17,6 @@ export default class Controller {
       callbacks['mouseup'].forEach((callback) => {
         callback();
       });
-      console.log('Mouse released!');
     });
     $(window).on('keypress', (e) => {
       // use key code to check space bar
@@ -45,6 +37,15 @@ export default class Controller {
       callbacks['keyup'].forEach((callback) => {
         callback();
       });
+    });*/
+  }
+  addCallback(type, callback) {
+    this.callbacks[type].push(callback);
+    $(window).on(type, (e) => {
+      e.stopImmediatePropagation();
+      callback(e);
     });
   }
 }
+
+export default new Controller();

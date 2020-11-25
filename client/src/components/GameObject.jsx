@@ -5,7 +5,6 @@ import { matrix, multiply, add, cos, sin, identity, zeros, index, subset } from 
 
 // functional prototype class for all game objects
 const GameObject = function (vertices, width, height) {
-  // width and height of the sprite
   this.width = width;
   this.height = height;
   this.vertices = matrix(vertices);
@@ -74,7 +73,7 @@ GameObject.prototype.getSVGCoords = function () {
 
 // caculates the current transformation matrix
 GameObject.prototype.calcTransformationMatrix = function () {
-  console.log(`Rotation: ${this.rotation.current}, Position: ${this.position.current}`);
+  // console.log(`Rotation: ${this.rotation.current}, Position: ${this.position.current}`);
   this.transformation.current = add(
     multiply(this.vertices, this.rotationMatrix),
     this.translationMatrix
