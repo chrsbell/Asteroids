@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { atan2 } from 'mathjs';
+import { GameContext } from './GameContext.jsx';
 import GameObject from './GameObject.jsx';
 import Bullet from './Bullet.jsx';
 import Controller from './Controller.js';
@@ -8,6 +9,7 @@ import Controller from './Controller.js';
 // ship should be able to shoot bullets if mouse pressed
 
 const Ship = function () {
+  const { gameState, dispatch } = useContext(GameContext);
   // vertices should be homogeneous
   const vertices = [
     [0, 48, 1],
@@ -20,7 +22,7 @@ const Ship = function () {
   Controller.addCallback('mousemove', this.rotateToCursor.bind(this));
   // component mount
   useEffect(() => {
-    this.setAbsolutePosition(500, 250);
+    this.setAbsolutePosition(gameState.screenWidth / 2, gameState.screenHeight / 2);
   }, []);
   return this.render();
 };
