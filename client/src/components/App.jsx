@@ -4,8 +4,11 @@ import { GameContext } from './GameContext.jsx';
 import Game from './Game.jsx';
 import Ship from './Ship.jsx';
 
-//
 const initialGameState = {
+  screenWidth: 1920,
+  screenHeight: 1080,
+  level: 1,
+  lives: 3,
   objects: {
     player: null,
     asteroids: [],
@@ -25,7 +28,6 @@ const reducer = (state, action) => {
 
 const App = () => {
   const [gameState, dispatch] = useReducer(reducer, initialGameState);
-
   return (
     <GameContext.Provider value={{ gameState, dispatch }}>
       <Game />
