@@ -1,7 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackTemplate = require('html-webpack-template');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = (env, argv) => {
   return {
@@ -23,30 +22,27 @@ module.exports = (env, argv) => {
         },
       ],
     },
-    optimization: {
-      minimize: true,
-      minimizer: [
-        new HtmlWebpackPlugin({
-          inject: true,
-          template: HtmlWebpackTemplate,
-          appMountId: 'app',
-          meta: [
-            {
-              name: 'description',
-              content: 'Asteroids',
-            },
-            {
-              name: 'author',
-              content: 'Chris Bell',
-            },
-          ],
-          lang: 'en-US',
-          mobile: true,
-          title: 'Asteroids',
-          minify: true,
-        }),
-      ],
-    },
-    plugins: [new CleanWebpackPlugin()],
+    plugins: [
+      new webpack.ProgressPlugin(),
+      new HtmlWebpackPlugin({
+        inject: true,
+        template: require('html-webpack-template'),
+        appMountId: 'app',
+        meta: [
+          {
+            name: 'description',
+            content: 'Asteroids',
+          },
+          {
+            name: 'author',
+            content: 'Chris Bell',
+          },
+        ],
+        lang: 'en-US',
+        mobile: true,
+        title: 'Asteroids',
+        minify: argv.mode === 'production' ? true : false,
+      }),
+    ],
   };
 };
