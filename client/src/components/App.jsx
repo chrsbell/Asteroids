@@ -28,7 +28,7 @@ const initialGameState = {
     x: 0,
     y: 0,
   },
-  updateSpeed: Math.floor(1000 / 120),
+  updateSpeed: Math.floor(1000 / 120), // in ms
   level: 1,
   lives: 3,
   objects: {

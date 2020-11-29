@@ -6,12 +6,9 @@ import { GameContext } from './GameContext.jsx';
 // functional prototype class for all game objects
 const GameObject = function (vertices, dimensions) {
   const { gameState, dispatch } = useContext(GameContext);
-  this.width = dimensions.width;
-  this.height = dimensions.height;
+  this.dimensions = dimensions;
   this.screen = gameState.screen;
-  this.updateSpeed = gameState.updateSpeed;
   this.vertices = matrix(vertices);
-  this.inGlobalObjects = useRef(false);
   // the transformed coordinates
   this.transformation = useRef(this.vertices);
   // current rotation in radians (maintain value between function calls without triggering re-render)
@@ -19,7 +16,7 @@ const GameObject = function (vertices, dimensions) {
   // current position of object
   this.position = useRef({ x: 0, y: 0 });
   // velocity of the object
-  [this.velocity, this.setVelocity] = useState({ x: 0, y: 0 });
+  [this.velocity, this.setVelocity] = useState({ x: 0, y: 3 });
   // matrices for rotation and translation
   [this.rotationMatrix, this.setRotationMatrix] = useState(identity(3, 3));
   [this.translationMatrix, this.setTranslationMatrix] = useState(zeros(this.vertices.size()));
@@ -37,8 +34,8 @@ GameObject.prototype.rotate = function (angleInRadians) {
   this.rotation.current = angleInRadians;
   // math haHA https://developers.foxitsoftware.com/kb/wp-content/uploads/formula-1024x418.png
   // rotate the object around its origin
-  const Cx = this.width / 2;
-  const Cy = this.height / 2;
+  const Cx = this.dimensions.width / 2;
+  const Cy = this.dimensions.height / 2;
   const Sx = Cx - (Cx * cos(angleInRadians) - Cy * sin(angleInRadians));
   const Sy = Cy - (Cx * sin(angleInRadians) + Cy * cos(angleInRadians));
   this.setRotationMatrix(
@@ -52,12 +49,13 @@ GameObject.prototype.rotate = function (angleInRadians) {
 
 // translates the game object by the specified offset
 GameObject.prototype.translate = function (offsetX, offsetY) {
-  const newPosX = this.position.current.x + offsetX;
-  const newPosY = this.position.current.y + offsetY;
-  if (newPosX + this.width > this.screen.width) {
+  let newPosX = this.position.current.x + offsetX;
+  let newPosY = this.position.current.y + offsetY;
+  let maxDimension = Math.max(this.dimensions.width, this.dimensions.height);
+  if (newPosX - maxDimension > this.screen.width) {
     newPosX = 0;
   }
-  if (newPosY + this.height > this.screen.height) {
+  if (newPosY - maxDimension > this.screen.height) {
     newPosY = 0;
   }
   this.position.current = { x: newPosX, y: newPosY };

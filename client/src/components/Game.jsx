@@ -27,7 +27,7 @@ const Game = () => {
   return (
     <>
       {playerShipRender}
-      {<AsteroidView />};
+      <AsteroidView />;
     </>
   );
 };

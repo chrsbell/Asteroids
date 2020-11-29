@@ -19,11 +19,11 @@ const Ship = function () {
   ];
   // base class constructor
   GameObject.call(this, vertices, { width: 32, height: 48 });
-  this.rotateToCursor = this.rotateToCursor.bind(this, gameState, dispatch);
+  this.rotateToCursor = this.rotateToCursor.bind(this, gameState.mouse, dispatch);
   Controller.addCallback('mousemove', this.rotateToCursor);
   // component mount
   useEffect(() => {
-    this.setAbsolutePosition(gameState.screen.width / 2, gameState.screen.height / 2);
+    this.setAbsolutePosition(this.screen.width / 2, this.screen.height / 2);
   }, []);
   return [this, this.render()];
 };
@@ -38,7 +38,7 @@ Ship.prototype.update = function () {
 };
 
 // rotates the ship towards the cursor
-Ship.prototype.rotateToCursor = function (gameState, dispatch, e) {
+Ship.prototype.rotateToCursor = function (mouse, dispatch, e) {
   let mouseX = 0;
   let mouseY = 0;
   // the mouse moved, so update the current position
@@ -48,8 +48,8 @@ Ship.prototype.rotateToCursor = function (gameState, dispatch, e) {
     dispatch({ type: 'mouse', position: { x: mouseX, y: mouseY } });
   } else {
     // the mouse didn't move
-    mouseX = gameState.mouse.x;
-    mouseY = gameState.mouse.y;
+    mouseX = mouse.x;
+    mouseY = mouse.y;
   }
   this.rotate(
     atan2(mouseY - this.position.current.y, mouseX - this.position.current.x) + Math.PI / 2
