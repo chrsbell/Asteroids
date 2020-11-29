@@ -73,16 +73,12 @@ GameObject.prototype.setAbsolutePosition = function (posX, posY) {
 
 // return the coordinates of the svg in polygon point format
 GameObject.prototype.getSVGCoords = function () {
-  // could use a regex here
   // only use the first 2 columns of the matrix
-  const formatted = subset(
+  const rawCoordinates = subset(
     this.transformation.current,
     index([...Array(this.vertices.size()[0]).keys()], [0, 1])
   );
-  let svgCoords = formatted.format().replaceAll('],', '');
-  svgCoords = svgCoords.replaceAll('[', '');
-  svgCoords = svgCoords.replaceAll(']', '');
-  svgCoords = svgCoords.replaceAll(', ', ',');
+  let svgCoords = rawCoordinates.format().replace(/\],|\[|\]/g, '');
   return svgCoords;
 };
 
