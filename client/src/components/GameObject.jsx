@@ -1,22 +1,33 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { matrix, multiply, add, cos, sin, identity, zeros, index, subset } from 'mathjs';
-
+import { GameContext } from './GameContext.jsx';
 // game objects should be able to wrap around screen
 
 // functional prototype class for all game objects
 const GameObject = function (vertices, width, height) {
+  const { gameState, dispatch } = useContext(GameContext);
   this.width = width;
   this.height = height;
+  this.screen = gameState.screen;
+  this.updateSpeed = gameState.updateSpeed;
   this.vertices = matrix(vertices);
   // the transformed coordinates
   this.transformation = useRef(this.vertices);
   // current rotation in radians (maintain value between function calls without triggering re-render)
   this.rotation = useRef(0);
   // current position of object
-  this.position = useRef([0, 0]);
+  this.position = useRef({ x: 0, y: 0 });
+  // velocity of the object
+  [this.velocity, this.setVelocity] = useState({ x: 1, y: 0 });
   // matrices for rotation and translation
   [this.rotationMatrix, this.setRotationMatrix] = useState(identity(3, 3));
   [this.translationMatrix, this.setTranslationMatrix] = useState(zeros(this.vertices.size()));
+};
+
+GameObject.prototype.update = function () {
+  if (this.velocity.x > 0 || this.velocity.y > 0) {
+    this.translate(this.velocity.x, this.velocity.y);
+  }
 };
 
 // rotates the svg in radians
@@ -40,9 +51,15 @@ GameObject.prototype.rotate = function (angleInRadians) {
 
 // translates the game object by the specified offset
 GameObject.prototype.translate = function (offsetX, offsetY) {
-  const newPosX = this.position.current[0] + offsetX;
-  const newPosY = this.position.current[1] + offsetY;
-  this.position.current = [newPosX, newPosY];
+  const newPosX = this.position.current.x + offsetX;
+  const newPosY = this.position.current.y + offsetY;
+  if (newPosX + this.width > this.screen.width) {
+    newPosX = 0;
+  }
+  if (newPosY + this.height > this.screen.height) {
+    newPosY = 0;
+  }
+  this.position.current = { x: newPosX, y: newPosY };
   const numRows = this.vertices.size()[0];
   // create rows of new position coordinates
   this.setTranslationMatrix(matrix([...Array(numRows).keys()].map((row) => [newPosX, newPosY, 1])));
@@ -50,7 +67,7 @@ GameObject.prototype.translate = function (offsetX, offsetY) {
 
 // set the absolute position of the game object
 GameObject.prototype.setAbsolutePosition = function (posX, posY) {
-  this.position.current = [posX, posY];
+  this.position.current = { x: posX, y: posY };
   const numRows = this.vertices.size()[0];
   // create rows of new position coordinates
   this.setTranslationMatrix(matrix([...Array(numRows).keys()].map((row) => [posX, posY, 1])));
@@ -73,7 +90,9 @@ GameObject.prototype.getSVGCoords = function () {
 
 // caculates the current transformation matrix
 GameObject.prototype.calcTransformationMatrix = function () {
-  // console.log(`Rotation: ${this.rotation.current}, Position: ${this.position.current}`);
+  // console.log(
+  //   `Rotation: ${this.rotation.current}, Position: ${JSON.stringify(this.position.current)}`
+  // );
   this.transformation.current = add(
     multiply(this.vertices, this.rotationMatrix),
     this.translationMatrix
@@ -84,7 +103,10 @@ GameObject.prototype.calcTransformationMatrix = function () {
 GameObject.prototype.render = function () {
   this.calcTransformationMatrix();
   return (
-    <svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      viewBox={`0 0 ${this.screen.width} ${this.screen.height}`}
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <polygon points={this.getSVGCoords()} fill="none" stroke="black" />
     </svg>
   );

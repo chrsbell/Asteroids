@@ -5,13 +5,19 @@ import AsteroidView from './AsteroidView.jsx';
 
 const Game = () => {
   const { gameState, dispatch } = useContext(GameContext);
-  const playerShip = new Ship();
+  const [playerShip, playerShipRender] = new Ship();
+  const update = () => {
+    console.log('Updated Game');
+    playerShip.update();
+    setTimeout(update, gameState.updateSpeed);
+  };
   useEffect(() => {
     dispatch({ type: 'player', player: playerShip });
+    update();
   }, []);
   return (
     <>
-      {playerShip}
+      {playerShipRender}
       <AsteroidView />;
     </>
   );

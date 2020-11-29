@@ -12,6 +12,7 @@ const AsteroidView = () => {
   useEffect(() => {
     console.log(`Asteroid count: ${gameState.objects.asteroids.length}`);
   }, [gameState.objects.asteroids.length]);
+
   return testAsteroid;
 };
 

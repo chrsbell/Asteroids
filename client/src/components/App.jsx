@@ -24,7 +24,11 @@ const initialGameState = {
     width: Math.round($(window).width() * 0.95),
     height: Math.round($(window).height() * 0.95),
   },
-  updateSpeed: 10,
+  mouse: {
+    x: 0,
+    y: 0,
+  },
+  updateSpeed: Math.round(1000 / 60),
   level: 1,
   lives: 3,
   objects: {
@@ -35,6 +39,9 @@ const initialGameState = {
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case 'mouse':
+      state.mouse.x = action.position.x;
+      state.mouse.y = action.position.y;
     case 'asteroid':
       state.objects.asteroids.push(action.asteroid);
       return state;
@@ -46,7 +53,7 @@ const reducer = (state, action) => {
 
 const App = () => {
   const [gameState, dispatch] = useReducer(reducer, initialGameState);
-  console.log(JSON.stringify(gameState.screen));
+  console.log('Rendered the App!');
   return (
     <GameContext.Provider value={{ gameState, dispatch }}>
       <Window size={gameState.screen}>

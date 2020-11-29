@@ -20,8 +20,8 @@ const Asteroid = function () {
   ];
   GameObject.call(this, vertices, 30, 30);
   useEffect(() => {
-    const randX = Math.round(Math.random() * gameState.screenWidth);
-    const randY = Math.round(Math.random() * gameState.screenHeight);
+    const randX = Math.round(Math.random() * gameState.screen.width);
+    const randY = Math.round(Math.random() * gameState.screen.height);
     this.setAbsolutePosition(randX, randY);
   }, []);
   return this.render();
