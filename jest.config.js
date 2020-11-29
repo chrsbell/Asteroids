@@ -10,14 +10,14 @@ module.exports = {
 
   // Use this configuration option to add custom reporters to Jest
 
-  // reporters: [
-  //   [
-  //     'jest-nyancat-reporter',
-  //     {
-  //       suppressErrorReporter: false,
-  //     },
-  //   ],
-  // ],
+  reporters: [
+    [
+      'jest-nyancat-reporter',
+      {
+        suppressErrorReporter: false,
+      },
+    ],
+  ],
   moduleFileExtensions: ['js', 'jsx'],
   testPathIgnorePatterns: ['/node_modules/', '/public/'],
   // setupFiles before the tests are ran
