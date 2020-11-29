@@ -28,7 +28,7 @@ const initialGameState = {
     x: 0,
     y: 0,
   },
-  updateSpeed: Math.round(1000 / 60),
+  updateSpeed: Math.floor(1000 / 120),
   level: 1,
   lives: 3,
   objects: {
@@ -42,6 +42,7 @@ const reducer = (state, action) => {
     case 'mouse':
       state.mouse.x = action.position.x;
       state.mouse.y = action.position.y;
+      return state;
     case 'asteroid':
       state.objects.asteroids.push(action.asteroid);
       return state;

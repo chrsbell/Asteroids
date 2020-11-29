@@ -18,13 +18,13 @@ const Asteroid = function () {
     [0, 20, 1],
     [0, 10, 1],
   ];
-  GameObject.call(this, vertices, 30, 30);
+  GameObject.call(this, vertices, { width: 30, height: 30 });
   useEffect(() => {
     const randX = Math.round(Math.random() * gameState.screen.width);
     const randY = Math.round(Math.random() * gameState.screen.height);
     this.setAbsolutePosition(randX, randY);
   }, []);
-  return this.render();
+  return [this, this.render()];
 };
 
 Asteroid.prototype.constructor = Asteroid;

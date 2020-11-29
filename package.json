@@ -17,6 +17,7 @@
     "mathjs": "^8.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "stats.js": "^0.17.0",
     "styled-components": "^5.2.1",
     "underscore": "^1.11.0"
   },

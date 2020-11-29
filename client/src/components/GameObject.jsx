@@ -4,13 +4,14 @@ import { GameContext } from './GameContext.jsx';
 // game objects should be able to wrap around screen
 
 // functional prototype class for all game objects
-const GameObject = function (vertices, width, height) {
+const GameObject = function (vertices, dimensions) {
   const { gameState, dispatch } = useContext(GameContext);
-  this.width = width;
-  this.height = height;
+  this.width = dimensions.width;
+  this.height = dimensions.height;
   this.screen = gameState.screen;
   this.updateSpeed = gameState.updateSpeed;
   this.vertices = matrix(vertices);
+  this.inGlobalObjects = useRef(false);
   // the transformed coordinates
   this.transformation = useRef(this.vertices);
   // current rotation in radians (maintain value between function calls without triggering re-render)
@@ -18,7 +19,7 @@ const GameObject = function (vertices, width, height) {
   // current position of object
   this.position = useRef({ x: 0, y: 0 });
   // velocity of the object
-  [this.velocity, this.setVelocity] = useState({ x: 1, y: 0 });
+  [this.velocity, this.setVelocity] = useState({ x: 0, y: 0 });
   // matrices for rotation and translation
   [this.rotationMatrix, this.setRotationMatrix] = useState(identity(3, 3));
   [this.translationMatrix, this.setTranslationMatrix] = useState(zeros(this.vertices.size()));

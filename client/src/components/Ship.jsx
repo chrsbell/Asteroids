@@ -18,7 +18,7 @@ const Ship = function () {
     [18, 42, 1],
   ];
   // base class constructor
-  GameObject.call(this, vertices, 32, 48);
+  GameObject.call(this, vertices, { width: 32, height: 48 });
   this.rotateToCursor = this.rotateToCursor.bind(this, gameState, dispatch);
   Controller.addCallback('mousemove', this.rotateToCursor);
   // component mount
@@ -48,7 +48,6 @@ Ship.prototype.rotateToCursor = function (gameState, dispatch, e) {
     dispatch({ type: 'mouse', position: { x: mouseX, y: mouseY } });
   } else {
     // the mouse didn't move
-    debugger;
     mouseX = gameState.mouse.x;
     mouseY = gameState.mouse.y;
   }
