@@ -20,9 +20,11 @@ const Ship = function () {
   // base class constructor
   GameObject.call(this, vertices, { width: 32, height: 48 });
   this.rotateToCursor = this.rotateToCursor.bind(this, gameState.mouse, dispatch);
-  Controller.addCallback('mousemove', this.rotateToCursor);
+  this.shoot = this.shoot.bind(this, gameState.mouse, dispatch);
   // component mount
   useEffect(() => {
+    Controller.addCallback('keypress', this.shoot, 32);
+    Controller.addCallback('mousemove', this.rotateToCursor);
     this.setAbsolutePosition(this.screen.width / 2, this.screen.height / 2);
   }, []);
   return [this, this.render()];

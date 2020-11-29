@@ -1,7 +1,6 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { matrix, multiply, add, cos, sin, identity, zeros, index, subset } from 'mathjs';
 import { GameContext } from './GameContext.jsx';
-// game objects should be able to wrap around screen
 
 // functional prototype class for all game objects
 const GameObject = function (vertices, dimensions) {

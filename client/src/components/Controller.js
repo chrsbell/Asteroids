@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 class Controller {
   constructor() {
-    this.callbacks = { mousemove: [] };
+    this.callbacks = { mousemove: [], keypress: [] };
     /*
     $(window).on('mousedown', (e) => {
       e.stopImmediatePropagation();
@@ -39,11 +39,19 @@ class Controller {
       });
     });*/
   }
-  addCallback(type, callback) {
+  addCallback(type, callback, keyCode) {
     this.callbacks[type].push(callback);
+    console.log(this.callbacks.mousemove.length);
     $(window).on(type, (e) => {
       e.stopImmediatePropagation();
-      callback(e);
+      if (keyCode) {
+        if (e.keyCode === keyCode) {
+          debugger;
+          callback(e);
+        }
+      } else {
+        callback(e);
+      }
     });
   }
 }
