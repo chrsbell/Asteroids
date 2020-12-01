@@ -15,7 +15,7 @@ const GameObject = function (vertices, dimensions) {
   // current position of object
   this.position = useRef({ x: 0, y: 0 });
   // velocity of the object
-  [this.velocity, this.setVelocity] = useState({ x: 0, y: 3 });
+  [this.velocity, this.setVelocity] = useState({ x: 0, y: 0 });
   // matrices for rotation and translation
   [this.rotationMatrix, this.setRotationMatrix] = useState(identity(3, 3));
   [this.translationMatrix, this.setTranslationMatrix] = useState(zeros(this.vertices.size()));

@@ -59,6 +59,8 @@ Ship.prototype.rotateToCursor = function (mouse, dispatch, e) {
 };
 
 // shoot bullets in the direction of the cursor
-Ship.prototype.shoot = function (e) {};
+Ship.prototype.shoot = function (e) {
+  const PlayerBullet = new Bullet();
+};
 
 export default Ship;

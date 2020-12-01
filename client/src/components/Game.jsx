@@ -14,7 +14,10 @@ const Game = () => {
   const [playerShip, playerShipRender] = new Ship();
   const update = () => {
     stats.end();
-    playerShip.update();
+    gameState.objects.player.update();
+    for (let asteroid of gameState.objects.asteroids) {
+      asteroid.update();
+    }
     stats.begin();
     setTimeout(update, gameState.updateSpeed);
   };
@@ -27,7 +30,7 @@ const Game = () => {
   return (
     <>
       {playerShipRender}
-      <AsteroidView />;
+      <AsteroidView />
     </>
   );
 };

@@ -3,7 +3,7 @@ import { GameContext } from './GameContext.jsx';
 import Asteroid from './Asteroid.jsx';
 
 // the container for all asteroids in the game
-function AsteroidView() {
+const AsteroidView = () => {
   const { gameState, dispatch } = useContext(GameContext);
   let [testAsteroid, testAsteroidRender] = new Asteroid();
   useEffect(() => {
@@ -15,6 +15,6 @@ function AsteroidView() {
   }, [gameState.objects.asteroids.length]);
 
   return testAsteroidRender;
-}
+};
 
 export default AsteroidView;
