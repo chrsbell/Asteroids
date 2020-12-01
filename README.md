@@ -1,6 +1,4 @@
-# empty-project
-
-Empty project.
+# Asteroids
 
 ## Building and running on localhost
 
