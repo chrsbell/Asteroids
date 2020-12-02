@@ -20,7 +20,7 @@ const Ship = function () {
   // base class constructor
   GameObject.call(this, vertices, { width: 32, height: 48 });
   this.rotateToCursor = this.rotateToCursor.bind(this, gameState.mouse, dispatch);
-  this.shoot = this.shoot.bind(this, gameState.mouse, dispatch);
+  this.shoot = this.shoot.bind(this, dispatch);
   // component mount
   useEffect(() => {
     Controller.addCallback('keypress', this.shoot, 32);
@@ -59,8 +59,13 @@ Ship.prototype.rotateToCursor = function (mouse, dispatch, e) {
 };
 
 // shoot bullets in the direction of the cursor
-Ship.prototype.shoot = function (e) {
-  const PlayerBullet = new Bullet();
+Ship.prototype.shoot = function (dispatch, e) {
+  const PlayerBullet = new Bullet(
+    this.position.current.x,
+    this.position.current.y,
+    this.rotation.current
+  );
+  dispatch({ type: 'bullet', PlayerBullet });
 };
 
 export default Ship;

@@ -28,12 +28,17 @@ const initialGameState = {
     x: 0,
     y: 0,
   },
+  bullet: {
+    canShoot: false,
+    speed: 1,
+  },
   updateSpeed: Math.floor(1000 / 120), // in ms
   level: 1,
   lives: 3,
   objects: {
     player: null,
     asteroids: [],
+    bullets: [],
   },
 };
 
@@ -45,6 +50,9 @@ const reducer = (state, action) => {
       return state;
     case 'asteroid':
       state.objects.asteroids.push(action.asteroid);
+      return state;
+    case 'bullets':
+      state.objects.bullets.push(action.bullet);
       return state;
     case 'player':
       state.objects.player = action.player;

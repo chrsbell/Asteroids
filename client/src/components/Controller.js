@@ -46,7 +46,6 @@ class Controller {
       e.stopImmediatePropagation();
       if (keyCode) {
         if (e.keyCode === keyCode) {
-          debugger;
           callback(e);
         }
       } else {
