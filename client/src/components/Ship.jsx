@@ -27,7 +27,7 @@ const Ship = function () {
     Controller.addCallback('mousemove', this.rotateToCursor);
     this.setAbsolutePosition(this.screen.width / 2, this.screen.height / 2);
   }, []);
-  return [this, this.render()];
+  return null;
 };
 
 Ship.prototype = Object.create(GameObject.prototype);

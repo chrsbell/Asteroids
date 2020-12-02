@@ -11,7 +11,7 @@ document.body.appendChild(stats.dom);
 
 const Game = () => {
   const { gameState, dispatch } = useContext(GameContext);
-  const [playerShip, playerShipRender] = new Ship();
+  const PlayerShip = new Ship();
   const update = () => {
     stats.end();
     gameState.objects.player.update();
@@ -22,17 +22,15 @@ const Game = () => {
     setTimeout(update, gameState.updateSpeed);
   };
 
+  const render = () => {};
+
   useEffect(() => {
     stats.begin();
-    dispatch({ type: 'player', player: playerShip });
+    dispatch({ type: 'player', player: PlayerShip });
     update();
+    render();
   }, []);
-  return (
-    <>
-      {playerShipRender}
-      <AsteroidView />
-    </>
-  );
+  return null;
 };
 
 export default Game;

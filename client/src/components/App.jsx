@@ -1,23 +1,10 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useRef, useReducer } from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import styled from 'styled-components';
 import { GameContext } from './GameContext.jsx';
 import Game from './Game.jsx';
 import Ship from './Ship.jsx';
-
-const Window = styled.div`
-  position: absolute;
-  display: block;
-  width: ${(props) => props.size.width}px;
-  height: ${(props) => props.size.height}px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border: dashed red;
-  overflow-x: hidden;
-  overflow-y: hidden;
-`;
 
 const initialGameState = {
   screen: {
@@ -51,7 +38,7 @@ const reducer = (state, action) => {
     case 'asteroid':
       state.objects.asteroids.push(action.asteroid);
       return state;
-    case 'bullets':
+    case 'bullet':
       state.objects.bullets.push(action.bullet);
       return state;
     case 'player':
@@ -63,13 +50,17 @@ const reducer = (state, action) => {
 const App = () => {
   const [gameState, dispatch] = useReducer(reducer, initialGameState);
   console.log('Rendered the App!');
+  const canvasRef = useRef(null);
   return (
     <GameContext.Provider value={{ gameState, dispatch }}>
-      <Window size={gameState.screen}>
-        <Game />
-      </Window>
+      <canvas
+        width={gameState.screen.width}
+        height={gameState.screen.height}
+        ref={canvasRef}
+      ></canvas>
+      <Game canvas={canvasRef} />
     </GameContext.Provider>
   );
 };
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(<App />, app);

@@ -71,17 +71,6 @@ GameObject.prototype.setAbsolutePosition = function (posX, posY) {
   this.setTranslationMatrix(matrix([...Array(numRows).keys()].map((row) => [posX, posY, 1])));
 };
 
-// return the coordinates of the svg in polygon point format
-GameObject.prototype.getSVGCoords = function () {
-  // only use the first 2 columns of the matrix
-  const rawCoordinates = subset(
-    this.transformation.current,
-    index([...Array(this.vertices.size()[0]).keys()], [0, 1])
-  );
-  let svgCoords = rawCoordinates.format().replace(/\],|\[|\]/g, '');
-  return svgCoords;
-};
-
 // caculates the current transformation matrix
 GameObject.prototype.calcTransformationMatrix = function () {
   // console.log(
@@ -96,14 +85,7 @@ GameObject.prototype.calcTransformationMatrix = function () {
 // renders the react component
 GameObject.prototype.render = function () {
   this.calcTransformationMatrix();
-  return (
-    <svg
-      viewBox={`0 0 ${this.screen.width} ${this.screen.height}`}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <polygon points={this.getSVGCoords()} fill="none" stroke="black" />
-    </svg>
-  );
+  return null;
 };
 
 export default GameObject;

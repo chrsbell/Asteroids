@@ -41,6 +41,7 @@ module.exports = (env, argv) => {
         lang: 'en-US',
         mobile: true,
         title: 'Asteroids',
+        // bodyHtmlSnippet: '<canvas id="gameCanvas"></canvas>',
         minify: argv.mode === 'production' ? true : false,
       }),
     ],
