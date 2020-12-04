@@ -3,7 +3,7 @@ import Shaders from './Shaders.js';
 class Renderer {
   constructor(canvas) {
     if (canvas) {
-      this.gl = canvas.getContext('webgl2');
+      this.gl = canvas.getContext('webgl');
       if (this.gl) {
         this.vertexShader = Shaders.createShader(
           this.gl,
@@ -22,16 +22,15 @@ class Renderer {
         // bind position buffer and describe/send its data
         this.positionBuffer = this.gl.createBuffer();
 
-        this.vaoObjOne = this.gl.createVertexArray();
-        this.vaoObjTwo = this.gl.createVertexArray();
-
+        // this.vaoObjOne = this.gl.createVertexArray();
+        // this.vaoObjTwo = this.gl.createVertexArray();
         const size = 2;
         const type = this.gl.FLOAT;
         const normalize = false;
         const stride = 0;
         const offset = 0;
 
-        this.gl.bindVertexArray(this.vaoObjOne);
+        // this.gl.bindVertexArray(this.vaoObjOne);
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
         this.gl.vertexAttribPointer(
           this.positionAttributeLocation,
@@ -42,24 +41,19 @@ class Renderer {
           offset
         );
 
-        var positions = [0, -0.5, 0, 0.5, 0.7, 0];
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(positions), this.gl.STATIC_DRAW);
-
-        this.gl.bindVertexArray(this.vaoObjTwo);
-        this.gl.vertexAttribPointer(
-          this.positionAttributeLocation,
-          size,
-          type,
-          normalize,
-          stride,
-          offset
-        );
+        const objOnePos = [0, -0.5, 0, 0.5, 0.7, 0];
+        // this.gl.bufferData(this.gl.ARRAY_BUFFER, 4 * 12, this.gl.STATIC_DRAW);
+        this.gl.bufferSubData(this.gl.ARRAY_BUFFER, 0, new Float32Array(objOnePos));
+        // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
+        // this.gl.bindVertexArray(this.vaoObjTwo);
         const objTwoPos = [-1, 0.5, 0, 1.0, 0.7, 0.5];
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(objTwoPos), this.gl.STATIC_DRAW);
+        // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(objTwoPos), this.gl.STATIC_DRAW);
+        this.gl.bufferSubData(this.gl.ARRAY_BUFFER, 4 * 6, new Float32Array(objTwoPos));
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
       }
     }
   }
-  draw(index) {
+  draw() {
     if (this.gl) {
       // this.gl.bindVertexArray(this.vao);
       this.gl.clearColor(0.1, 0.1, 0.1, 1);
@@ -67,16 +61,11 @@ class Renderer {
       this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
       var primitiveType = this.gl.TRIANGLES;
       var offset = 0;
-      var count = 3;
-      if (index === 0) {
-        this.gl.bindVertexArray(this.vaoObjOne);
-        this.gl.drawArrays(primitiveType, offset, count);
-        // this.gl.bindVertexArray(null);
-      } else {
-        this.gl.bindVertexArray(this.vaoObjTwo);
-        this.gl.drawArrays(primitiveType, offset, count);
-        // this.gl.bindVertexArray(null);
-      }
+      var count = 6;
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
+      this.gl.drawArrays(primitiveType, 0, count);
+      // this.gl.drawArrays(primitiveType, 4 * 2 * 8, count);
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
     }
   }
 }

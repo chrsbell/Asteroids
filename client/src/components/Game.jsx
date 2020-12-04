@@ -25,8 +25,7 @@ const Game = ({ canvas }) => {
 
   const render = () => {
     stats.end();
-    gameRenderer.draw(0);
-    gameRenderer.draw(1);
+    gameRenderer.draw();
     stats.begin();
     setTimeout(render, gameState.renderSpeed);
   };
