@@ -1,4 +1,4 @@
-import React, { useState, useRef, useReducer } from 'react';
+import React, { useState, useEffect, useRef, useReducer } from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import styled from 'styled-components';
@@ -20,6 +20,7 @@ const initialGameState = {
     speed: 1,
   },
   updateSpeed: Math.floor(1000 / 120), // in ms
+  renderSpeed: Math.floor(1000 / 120), // in ms
   level: 1,
   lives: 3,
   objects: {
@@ -51,6 +52,10 @@ const App = () => {
   const [gameState, dispatch] = useReducer(reducer, initialGameState);
   console.log('Rendered the App!');
   const canvasRef = useRef(null);
+  const [canvasReady, setCanvasReady] = useState(false);
+  useEffect(() => {
+    setCanvasReady(true);
+  }, []);
   return (
     <GameContext.Provider value={{ gameState, dispatch }}>
       <canvas
@@ -58,7 +63,7 @@ const App = () => {
         height={gameState.screen.height}
         ref={canvasRef}
       ></canvas>
-      <Game canvas={canvasRef} />
+      {canvasReady ? <Game canvas={canvasRef.current} /> : null}
     </GameContext.Provider>
   );
 };

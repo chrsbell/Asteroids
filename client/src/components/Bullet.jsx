@@ -19,3 +19,5 @@ const Bullet = function (x, y, direction) {
 
 Bullet.prototype = Object.create(GameObject.prototype);
 Bullet.prototype.constructor = Bullet;
+
+export default Bullet;

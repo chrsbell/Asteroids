@@ -41,7 +41,24 @@ module.exports = (env, argv) => {
         lang: 'en-US',
         mobile: true,
         title: 'Asteroids',
-        // bodyHtmlSnippet: '<canvas id="gameCanvas"></canvas>',
+        bodyHtmlSnippet: `
+        <script type="x-shader/x-vertex" id="vertex-shader">
+        #version 100
+        attribute vec4 a_position;
+
+        void main() {
+          gl_Position = a_position;
+        }
+        </script>
+        <script type="x-shader/x-fragment" id="fragment-shader">
+        #version 100
+        precision mediump float;
+
+        void main() {
+          gl_FragColor = vec4(1, 0, 0.5, 1); // return reddish-purple
+        }
+        </script>
+        `,
         minify: argv.mode === 'production' ? true : false,
       }),
     ],
