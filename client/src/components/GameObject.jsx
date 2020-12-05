@@ -82,10 +82,18 @@ GameObject.prototype.calcTransformationMatrix = function () {
   );
 };
 
-// renders the react component
-GameObject.prototype.render = function () {
+// renders the object using the CanvasRenderingContext2D interface
+// https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
+GameObject.prototype.render = function (ctx) {
   this.calcTransformationMatrix();
-  return null;
+  debugger;
+  ctx.beginPath();
+  ctx.moveTo(50, 140);
+  ctx.lineTo(150, 60);
+  ctx.lineTo(250, 140);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.strokeRect(75, 140, 150, 110);
 };
 
 export default GameObject;

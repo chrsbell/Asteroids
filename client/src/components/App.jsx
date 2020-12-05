@@ -7,6 +7,7 @@ import Game from './Game.jsx';
 import Ship from './Ship.jsx';
 
 const initialGameState = {
+  ctx: null,
   screen: {
     width: Math.round($(window).width() * 0.95),
     height: Math.round($(window).height() * 0.95),
@@ -45,6 +46,9 @@ const reducer = (state, action) => {
     case 'player':
       state.objects.player = action.player;
       return state;
+    case 'ctx':
+      state.ctx = action.ctx;
+      return state;
   }
 };
 
@@ -55,6 +59,7 @@ const App = () => {
   const [canvasReady, setCanvasReady] = useState(false);
   useEffect(() => {
     setCanvasReady(true);
+    dispatch({ type: 'ctx', ctx: canvasRef.current.getContext('2d') });
   }, []);
   return (
     <GameContext.Provider value={{ gameState, dispatch }}>
@@ -63,7 +68,7 @@ const App = () => {
         height={gameState.screen.height}
         ref={canvasRef}
       ></canvas>
-      {canvasReady ? <Game canvas={canvasRef.current} /> : null}
+      <Game />
     </GameContext.Provider>
   );
 };
