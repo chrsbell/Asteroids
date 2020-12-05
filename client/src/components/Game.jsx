@@ -13,10 +13,12 @@ const Game = () => {
   const { gameState, dispatch } = useContext(GameContext);
   const PlayerShip = new Ship();
 
-  const canvas = gameState.canvas;
+  const canvas = gameState.ctx.canvas;
 
   const update = () => {
-    gameState.objects.player.update();
+    if (gameState.objects.player) {
+      gameState.objects.player.update();
+    }
     for (let asteroid of gameState.objects.asteroids) {
       asteroid.update();
     }
@@ -31,21 +33,19 @@ const Game = () => {
 
     if (canvas.width !== width || canvas.height !== height) {
       const { devicePixelRatio: ratio = 1 } = window;
-      const context = gameState.ctx;
       canvas.width = width * ratio;
       canvas.height = height * ratio;
-      context.scale(ratio, ratio);
+      gameState.ctx.scale(ratio, ratio);
     }
   };
 
   const render = () => {
     stats.end();
-    if (gameState.ctx) {
-      // clear the screen
-      gameState.ctx.clearRect(0, 0, gameState.ctx.canvas.width, gameState.ctx.canvas.height);
-      if (gameState.objects.player) {
-        gameState.objects.player.render(gameState.ctx);
-      }
+    // clear the screen
+    gameState.ctx.setTransform();
+    gameState.ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (gameState.objects.player) {
+      gameState.objects.player.render(gameState.ctx);
     }
     stats.begin();
     setTimeout(render, gameState.renderSpeed);
@@ -54,10 +54,8 @@ const Game = () => {
   useEffect(() => {
     stats.begin();
     dispatch({ type: 'player', player: PlayerShip });
-    if (canvas) {
-      resizeCanvas();
-    }
-    // update();
+    resizeCanvas();
+    update();
     render();
   }, []);
   return null;

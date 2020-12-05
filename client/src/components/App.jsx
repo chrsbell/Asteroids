@@ -8,6 +8,7 @@ import Ship from './Ship.jsx';
 
 const initialGameState = {
   ctx: null,
+  canvas: null,
   screen: {
     width: Math.round($(window).width() * 0.95),
     height: Math.round($(window).height() * 0.95),
@@ -68,7 +69,7 @@ const App = () => {
         height={gameState.screen.height}
         ref={canvasRef}
       ></canvas>
-      <Game />
+      {canvasReady ? <Game /> : null}
     </GameContext.Provider>
   );
 };

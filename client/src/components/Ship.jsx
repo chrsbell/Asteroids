@@ -10,12 +10,11 @@ import Controller from './Controller.js';
 
 const Ship = function () {
   const { gameState, dispatch } = useContext(GameContext);
-  // vertices should be homogeneous
   const vertices = [
-    [0, 48, 1],
-    [18, 0, 1],
-    [32, 48, 1],
-    [18, 42, 1],
+    [0, 48],
+    [18, 0],
+    [32, 48],
+    [18, 42],
   ];
   // base class constructor
   GameObject.call(this, vertices, { width: 32, height: 48 });
@@ -25,7 +24,7 @@ const Ship = function () {
   useEffect(() => {
     Controller.addCallback('keypress', this.shoot, 32);
     Controller.addCallback('mousemove', this.rotateToCursor);
-    this.setAbsolutePosition(this.screen.width / 2, this.screen.height / 2);
+    this.setAbsolutePosition(this.screenWidth / 2, this.screenHeight / 2);
   }, []);
   return null;
 };
