@@ -1,5 +1,4 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { matrix, multiply, add, cos, sin, identity, zeros, index, subset } from 'mathjs';
 import { GameContext } from './GameContext.jsx';
 
 // functional prototype class for all game objects
@@ -7,7 +6,7 @@ const GameObject = function (vertices, dimensions) {
   const { gameState, dispatch } = useContext(GameContext);
   this.dimensions = dimensions;
   this.screenWidth = gameState.ctx.canvas.width;
-  this.screenHeight = gameState.ctx.canvas.width;
+  this.screenHeight = gameState.ctx.canvas.height;
   this.vertices = vertices;
   // current rotation in radians (maintain value between function calls without triggering re-render)
   this.rotation = useRef(0);

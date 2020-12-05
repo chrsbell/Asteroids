@@ -1,5 +1,4 @@
 import React, { useEffect, useContext } from 'react';
-import { atan2 } from 'mathjs';
 import { GameContext } from './GameContext.jsx';
 import GameObject from './GameObject.jsx';
 import Bullet from './Bullet.jsx';
@@ -53,7 +52,7 @@ Ship.prototype.rotateToCursor = function (mouse, dispatch, e) {
     mouseY = mouse.y;
   }
   this.rotate(
-    atan2(mouseY - this.position.current.y, mouseX - this.position.current.x) + Math.PI / 2
+    Math.atan2(mouseY - this.position.current.y, mouseX - this.position.current.x) + Math.PI / 2
   );
 };
 
