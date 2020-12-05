@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useRef } from 'react';
 import { GameContext } from './GameContext.jsx';
 import Ship from './Ship.jsx';
+import BulletView from './BulletView.jsx';
 import AsteroidView from './AsteroidView.jsx';
 import Stats from 'stats.js';
 
@@ -21,6 +22,9 @@ const Game = () => {
     }
     for (let asteroid of gameState.objects.asteroids) {
       asteroid.update();
+    }
+    for (let bullet of gameState.objects.bullets) {
+      bullet.update();
     }
     setTimeout(update, gameState.updateSpeed);
   };
@@ -47,6 +51,12 @@ const Game = () => {
     if (gameState.objects.player) {
       gameState.objects.player.render(gameState.ctx);
     }
+    for (let asteroid of gameState.objects.asteroids) {
+      asteroid.render();
+    }
+    for (let bullet of gameState.objects.bullets) {
+      bullet.render();
+    }
     stats.begin();
     setTimeout(render, gameState.renderSpeed);
   };
@@ -58,6 +68,7 @@ const Game = () => {
     update();
     render();
   }, []);
+
   return null;
 };
 
