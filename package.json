@@ -15,10 +15,8 @@
   "dependencies": {
     "express": "^4.17.1",
     "jquery": "^3.5.1",
-    "mathjs": "^8.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "remove": "^0.1.5",
     "stats.js": "^0.17.0",
     "styled-components": "^5.2.1",
     "underscore": "^1.11.0"

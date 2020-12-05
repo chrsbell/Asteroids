@@ -1,29 +1,24 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { matrix, multiply, add, cos, sin, identity, zeros, index, subset } from 'mathjs';
 import { GameContext } from './GameContext.jsx';
 
 // functional prototype class for all game objects
 const GameObject = function (vertices, dimensions) {
   const { gameState, dispatch } = useContext(GameContext);
   this.dimensions = dimensions;
-  this.screen = gameState.screen;
-  this.vertices = matrix(vertices);
-  // the transformed coordinates
-  this.transformation = useRef(this.vertices);
+  this.screenWidth = gameState.ctx.canvas.width;
+  this.screenHeight = gameState.ctx.canvas.height;
+  this.vertices = vertices;
   // current rotation in radians (maintain value between function calls without triggering re-render)
   this.rotation = useRef(0);
   // current position of object
   this.position = useRef({ x: 0, y: 0 });
   // velocity of the object
-  [this.velocity, this.setVelocity] = useState({ x: 0, y: 0 });
-  // matrices for rotation and translation
-  [this.rotationMatrix, this.setRotationMatrix] = useState(identity(3, 3));
-  [this.translationMatrix, this.setTranslationMatrix] = useState(zeros(this.vertices.size()));
+  this.velocity = useRef({ x: 1, y: 0 });
 };
 
 GameObject.prototype.update = function () {
-  if (this.velocity.x > 0 || this.velocity.y > 0) {
-    this.translate(this.velocity.x, this.velocity.y);
+  if (this.velocity.current.x > 0 || this.velocity.current.y > 0) {
+    this.translate(this.velocity.current.x, this.velocity.current.y);
   }
 };
 
@@ -31,79 +26,46 @@ GameObject.prototype.update = function () {
 // could memoize this?
 GameObject.prototype.rotate = function (angleInRadians) {
   this.rotation.current = angleInRadians;
-  // math haHA https://developers.foxitsoftware.com/kb/wp-content/uploads/formula-1024x418.png
-  // rotate the object around its origin
-  const Cx = this.dimensions.width / 2;
-  const Cy = this.dimensions.height / 2;
-  const Sx = Cx - (Cx * cos(angleInRadians) - Cy * sin(angleInRadians));
-  const Sy = Cy - (Cx * sin(angleInRadians) + Cy * cos(angleInRadians));
-  this.setRotationMatrix(
-    matrix([
-      [cos(angleInRadians), sin(angleInRadians), 0],
-      [-sin(angleInRadians), cos(angleInRadians), 0],
-      [Sx, Sy, 1],
-    ])
-  );
 };
 
 // translates the game object by the specified offset
 GameObject.prototype.translate = function (offsetX, offsetY) {
   let newPosX = this.position.current.x + offsetX;
   let newPosY = this.position.current.y + offsetY;
-  let maxDimension = Math.max(this.dimensions.width, this.dimensions.height);
-  if (newPosX - maxDimension > this.screen.width) {
+  const maxDimension = Math.max(this.dimensions.width, this.dimensions.height);
+  if (newPosX - maxDimension > this.screenWidth) {
     newPosX = 0;
   }
-  if (newPosY - maxDimension > this.screen.height) {
+  if (newPosY - maxDimension > this.screenHeight) {
     newPosY = 0;
   }
   this.position.current = { x: newPosX, y: newPosY };
-  const numRows = this.vertices.size()[0];
-  // create rows of new position coordinates
-  this.setTranslationMatrix(matrix([...Array(numRows).keys()].map((row) => [newPosX, newPosY, 1])));
 };
 
 // set the absolute position of the game object
 GameObject.prototype.setAbsolutePosition = function (posX, posY) {
   this.position.current = { x: posX, y: posY };
-  const numRows = this.vertices.size()[0];
-  // create rows of new position coordinates
-  this.setTranslationMatrix(matrix([...Array(numRows).keys()].map((row) => [posX, posY, 1])));
 };
 
-// return the coordinates of the svg in polygon point format
-GameObject.prototype.getSVGCoords = function () {
-  // only use the first 2 columns of the matrix
-  const rawCoordinates = subset(
-    this.transformation.current,
-    index([...Array(this.vertices.size()[0]).keys()], [0, 1])
-  );
-  let svgCoords = rawCoordinates.format().replace(/\],|\[|\]/g, '');
-  return svgCoords;
-};
+// renders the object using the CanvasRenderingContext2D interface
+// https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
+GameObject.prototype.render = function (ctx) {
+  // set the context's transformation matrix to identity
+  ctx.setTransform();
+  // rotate around origin
+  ctx.translate(this.position.current.x, this.position.current.y);
+  ctx.translate(this.dimensions.width / 2, this.dimensions.height / 2);
+  ctx.rotate(this.rotation.current);
+  ctx.translate(-this.dimensions.width / 2, -this.dimensions.height / 2);
 
-// caculates the current transformation matrix
-GameObject.prototype.calcTransformationMatrix = function () {
-  // console.log(
-  //   `Rotation: ${this.rotation.current}, Position: ${JSON.stringify(this.position.current)}`
-  // );
-  this.transformation.current = add(
-    multiply(this.vertices, this.rotationMatrix),
-    this.translationMatrix
-  );
-};
-
-// renders the react component
-GameObject.prototype.render = function () {
-  this.calcTransformationMatrix();
-  return (
-    <svg
-      viewBox={`0 0 ${this.screen.width} ${this.screen.height}`}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <polygon points={this.getSVGCoords()} fill="none" stroke="black" />
-    </svg>
-  );
+  // render vertices as lines
+  ctx.beginPath();
+  ctx.moveTo(this.vertices[0][0], this.vertices[0][1]);
+  for (let i = 1; i < this.vertices.length; i++) {
+    ctx.lineTo(this.vertices[i][0], this.vertices[i][1]);
+  }
+  ctx.closePath();
+  ctx.stroke();
 };
 
 export default GameObject;

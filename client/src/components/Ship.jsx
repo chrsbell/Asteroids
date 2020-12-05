@@ -1,5 +1,4 @@
 import React, { useEffect, useContext } from 'react';
-import { atan2 } from 'mathjs';
 import { GameContext } from './GameContext.jsx';
 import GameObject from './GameObject.jsx';
 import Bullet from './Bullet.jsx';
@@ -10,24 +9,23 @@ import Controller from './Controller.js';
 
 const Ship = function () {
   const { gameState, dispatch } = useContext(GameContext);
-  // vertices should be homogeneous
   const vertices = [
-    [0, 48, 1],
-    [18, 0, 1],
-    [32, 48, 1],
-    [18, 42, 1],
+    [0, 48],
+    [18, 0],
+    [32, 48],
+    [18, 42],
   ];
   // base class constructor
   GameObject.call(this, vertices, { width: 32, height: 48 });
   this.rotateToCursor = this.rotateToCursor.bind(this, gameState.mouse, dispatch);
-  this.shoot = this.shoot.bind(this, gameState.mouse, dispatch);
+  this.shoot = this.shoot.bind(this, dispatch);
   // component mount
   useEffect(() => {
     Controller.addCallback('keypress', this.shoot, 32);
     Controller.addCallback('mousemove', this.rotateToCursor);
-    this.setAbsolutePosition(this.screen.width / 2, this.screen.height / 2);
+    this.setAbsolutePosition(this.screenWidth / 2, this.screenHeight / 2);
   }, []);
-  return [this, this.render()];
+  return null;
 };
 
 Ship.prototype = Object.create(GameObject.prototype);
@@ -54,13 +52,18 @@ Ship.prototype.rotateToCursor = function (mouse, dispatch, e) {
     mouseY = mouse.y;
   }
   this.rotate(
-    atan2(mouseY - this.position.current.y, mouseX - this.position.current.x) + Math.PI / 2
+    Math.atan2(mouseY - this.position.current.y, mouseX - this.position.current.x) + Math.PI / 2
   );
 };
 
 // shoot bullets in the direction of the cursor
-Ship.prototype.shoot = function (e) {
-  const PlayerBullet = new Bullet();
+Ship.prototype.shoot = function (dispatch, e) {
+  const PlayerBullet = new Bullet(
+    this.position.current.x,
+    this.position.current.y,
+    this.rotation.current
+  );
+  dispatch({ type: 'bullet', PlayerBullet });
 };
 
 export default Ship;
