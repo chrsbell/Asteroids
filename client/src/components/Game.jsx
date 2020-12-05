@@ -1,5 +1,4 @@
-import React, { useEffect, useContext, useRef } from 'react';
-import { GameContext } from './GameContext.jsx';
+import state from './State.js';
 import Ship from './Ship.jsx';
 import BulletView from './BulletView.jsx';
 import AsteroidView from './AsteroidView.jsx';
@@ -10,66 +9,59 @@ const stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
-const Game = () => {
-  const { gameState, dispatch } = useContext(GameContext);
-  const PlayerShip = new Ship();
+class Game {
+  constructor() {
+    this.player = new Ship();
+    this.canvas = state.ctx.canvas;
+    this.resizeCanvas();
+    this.update();
+    this.render();
+  }
 
-  const canvas = gameState.ctx.canvas;
-
-  const update = () => {
-    if (gameState.objects.player) {
-      gameState.objects.player.update();
+  update() {
+    if (state.objects.player) {
+      state.objects.player.update();
     }
-    for (let asteroid of gameState.objects.asteroids) {
+    for (let asteroid of state.objects.asteroids) {
       asteroid.update();
     }
-    for (let bullet of gameState.objects.bullets) {
+    for (let bullet of state.objects.bullets) {
       bullet.update();
     }
-    setTimeout(update, gameState.updateSpeed);
-  };
+    setTimeout(this.update, state.updateSpeed);
+  }
 
   // need to resize canvas according to device pixel ratio
   // https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
   // https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio
-  const resizeCanvas = () => {
+  resizeCanvas() {
     const { width, height } = canvas.getBoundingClientRect();
 
-    if (canvas.width !== width || canvas.height !== height) {
+    if (this.canvas.width !== width || this.canvas.height !== height) {
       const { devicePixelRatio: ratio = 1 } = window;
-      canvas.width = width * ratio;
-      canvas.height = height * ratio;
-      gameState.ctx.scale(ratio, ratio);
+      this.canvas.width = width * ratio;
+      this.canvas.height = height * ratio;
+      state.ctx.scale(ratio, ratio);
     }
-  };
+  }
 
-  const render = () => {
+  render() {
     stats.end();
     // clear the screen
-    gameState.ctx.setTransform();
-    gameState.ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (gameState.objects.player) {
-      gameState.objects.player.render(gameState.ctx);
+    state.ctx.setTransform();
+    state.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    if (state.objects.player) {
+      state.objects.player.render(state.ctx);
     }
-    for (let asteroid of gameState.objects.asteroids) {
+    for (let asteroid of state.objects.asteroids) {
       asteroid.render();
     }
-    for (let bullet of gameState.objects.bullets) {
+    for (let bullet of state.objects.bullets) {
       bullet.render();
     }
     stats.begin();
-    setTimeout(render, gameState.renderSpeed);
-  };
-
-  useEffect(() => {
-    stats.begin();
-    dispatch({ type: 'player', player: PlayerShip });
-    resizeCanvas();
-    update();
-    render();
-  }, []);
-
-  return null;
-};
+    setTimeout(render, state.renderSpeed);
+  }
+}
 
 export default Game;

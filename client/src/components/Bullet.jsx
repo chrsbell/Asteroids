@@ -10,12 +10,11 @@ const Bullet = function (x, y, direction) {
   GameObject.call(this, null, { width: 10, height: 10 });
   useEffect(() => {
     this.setAbsolutePosition(x, y);
-    this.setVelocity(
-      gameState.bullet.speed * Math.cos(direction),
-      gameState.bullet.speed * Math.sin(direction)
-    );
+    this.velocity.current = {
+      x: gameState.bullet.speed * Math.cos(direction),
+      y: gameState.bullet.speed * Math.sin(direction),
+    };
   }, []);
-  return null;
 };
 
 Bullet.prototype = Object.create(GameObject.prototype);
