@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef, useReducer } from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-import styled from 'styled-components';
-import state from './State.js';
-import Game from './Game.jsx';
-import Ship from './Ship.jsx';
+import { store } from './Store.js';
+import Game from './Game.js';
 
 const App = () => {
   console.log('Rendered the App!');
@@ -13,7 +11,8 @@ const App = () => {
   let game = null;
   useEffect(() => {
     setCanvasReady(true);
-    state.ctx = canvasRef.current.getContext('2d');
+    const context = canvasRef.current.getContext('2d');
+    store.dispatch({ type: 'context', value: context });
   }, []);
   if (canvasReady) {
     game = new Game();

@@ -1,12 +1,13 @@
-import state from './State.js';
-import GameObject from './GameObject.jsx';
+import { store } from './Store.js';
+import GameObject from './GameObject.js';
 import Controller from './Controller.js';
-import BulletView from './BulletView.jsx';
+import BulletView from './BulletView.js';
 
 // ship should be able to shoot bullets if mouse pressed
 
 class Ship extends GameObject {
   constructor() {
+    debugger;
     const vertices = [
       [0, 48],
       [18, 0],
@@ -22,37 +23,35 @@ class Ship extends GameObject {
     Controller.addCallback('mousemove', this.rotateToCursor);
     this.setAbsolutePosition(this.screenWidth / 2, this.screenHeight / 2);
   }
-  rotateToCursor() {
+
+  rotateToCursor(e) {
     let mouseX = 0;
     let mouseY = 0;
     // the mouse moved, so update the current position
     if (e) {
       mouseX = e.pageX;
       mouseY = e.pageY;
+      store.dispatch({ type: 'mouse', value: { x: mouseX, y: mouseY } });
     } else {
+      const { mouse } = store.getState();
       // the mouse didn't move
       mouseX = mouse.x;
       mouseY = mouse.y;
     }
 
     // rotates the ship towards the cursor
-    this.rotate(
-      Math.atan2(mouseY - this.position.current.y, mouseX - this.position.current.x) + Math.PI / 2
-    );
+    this.rotate(Math.atan2(mouseY - this.position.y, mouseX - this.position.x) + Math.PI / 2);
   }
   // need to rotate the ship after each translation towards the mouse
   update() {
-    GameObject.prototype.update.call(this);
+    debugger;
+    super.update();
     this.rotateToCursor();
   }
   // shoot bullets in the direction of the cursor
   shoot() {
     if (this.canShoot) {
-      this.bullets.createBullet(
-        this.position.current.x,
-        this.position.current.y,
-        this.rotation.current
-      );
+      this.bullets.createBullet(this.position.x, this.position.y, this.rotation);
       this.canShoot = false;
       setTimeout(() => {
         this.canShoot = true;
