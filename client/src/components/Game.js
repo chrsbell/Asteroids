@@ -1,7 +1,7 @@
 import { store } from './Store.js';
 import Ship from './Ship.js';
 import BulletView from './BulletView.js';
-import AsteroidView from './AsteroidView.js';
+import ObstacleGenerator from './ObstacleGenerator.js';
 import Stats from 'stats.js';
 
 // fps counter
@@ -10,7 +10,9 @@ stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
 class Game {
-  constructor() {
+  constructor(level) {
+    this.level = level;
+    this.obstacleGenerator = new ObstacleGenerator(level);
     this.player = new Ship();
     store.dispatch({ type: 'player', value: this.player });
     this.resizeCanvas();
@@ -25,11 +27,8 @@ class Game {
     if (objects.player) {
       objects.player.update();
     }
-    for (let asteroid of objects.asteroids) {
-      asteroid.update();
-    }
-    for (let bullet of objects.bullets) {
-      bullet.update();
+    for (let id in objects.asteroids) {
+      objects.asteroids[id].update();
     }
     setTimeout(this.update, updateSpeed);
   }
@@ -60,11 +59,11 @@ class Game {
     if (objects.player) {
       objects.player.render(context);
     }
-    for (let asteroid of objects.asteroids) {
-      asteroid.render(context);
+    for (let id in objects.asteroids) {
+      objects.asteroids[id].render(context);
     }
-    for (let bullet of objects.bullets) {
-      bullet.render(context);
+    for (let id in objects.bullets) {
+      objects.bullets[id].render(context);
     }
     stats.begin();
     setTimeout(this.render, renderSpeed);

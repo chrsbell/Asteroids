@@ -3,20 +3,17 @@ import GameObject from './GameObject.js';
 import Controller from './Controller.js';
 import BulletView from './BulletView.js';
 
-// ship should be able to shoot bullets if mouse pressed
-
 class Ship extends GameObject {
   constructor() {
-    debugger;
     const vertices = [
       [0, 48],
       [18, 0],
       [32, 48],
       [18, 42],
     ];
-    super(vertices, { width: 32, height: 48 });
+    super(0, vertices, { width: 32, height: 48 });
     this.canShoot = true;
-    this.bullets = new BulletView();
+    this.bulletGenerator = new BulletView();
     this.shoot = this.shoot.bind(this);
     this.rotateToCursor = this.rotateToCursor.bind(this);
     Controller.addCallback('keypress', this.shoot, 32);
@@ -42,16 +39,25 @@ class Ship extends GameObject {
     // rotates the ship towards the cursor
     this.rotate(Math.atan2(mouseY - this.position.y, mouseX - this.position.x) + Math.PI / 2);
   }
-  // need to rotate the ship after each translation towards the mouse
   update() {
-    debugger;
     super.update();
+    this.bulletGenerator.update();
+    // need to rotate the ship after each translation towards the mouse
     this.rotateToCursor();
   }
   // shoot bullets in the direction of the cursor
   shoot() {
     if (this.canShoot) {
-      this.bullets.createBullet(this.position.x, this.position.y, this.rotation);
+      // need to offset bullet position by size of object and origin
+      const offsetX = (Math.cos(this.rotation - Math.PI / 2) * this.dimensions.height) / 2;
+      const offsetY = (Math.sin(this.rotation - Math.PI / 2) * this.dimensions.height) / 2;
+      const { numBullets } = store.getState().objects;
+      this.bulletGenerator.createBullet(
+        numBullets,
+        this.position.x + this.dimensions.width / 2 + offsetX,
+        this.position.y + this.dimensions.height / 2 + offsetY,
+        this.rotation
+      );
       this.canShoot = false;
       setTimeout(() => {
         this.canShoot = true;

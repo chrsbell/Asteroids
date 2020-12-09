@@ -16,12 +16,15 @@ let initialState = {
   lives: 3,
   objects: {
     player: null,
-    asteroids: [],
-    bullets: [],
+    asteroids: {},
+    numAsteroids: 0,
+    bullets: {},
+    numBullets: 0,
   },
 };
 
 const reducer = (state = initialState, action) => {
+  let id;
   switch (action.type) {
     case 'context':
       return {
@@ -39,6 +42,51 @@ const reducer = (state = initialState, action) => {
         objects: {
           ...state.objects,
           player: action.value,
+        },
+      };
+    case 'createBullet':
+      id = state.objects.numBullets;
+      return {
+        ...state,
+        objects: {
+          ...state.objects,
+          bullets: { ...state.objects.bullets, [id]: action.value },
+          numBullets: id + 1,
+        },
+      };
+    case 'deleteBullet':
+      id = action.value;
+      debugger;
+      const bullets = { ...state.objects.bullets };
+      delete bullets[id];
+      return {
+        ...state,
+        objects: {
+          ...state.objects,
+          bullets,
+          numBullets: state.objetcs.numBullets - 1,
+        },
+      };
+    case 'createAsteroid':
+      id = state.objects.numAsteroids;
+      return {
+        ...state,
+        objects: {
+          ...state.objects,
+          asteroids: { ...state.objects.asteroids, [id]: action.value },
+          numAsteroids: id + 1,
+        },
+      };
+    case 'deleteAsteroid':
+      id = action.value;
+      const asteroids = { ...state.objects.asteroids };
+      delete asteroids[id];
+      return {
+        ...state,
+        objects: {
+          ...state.objects,
+          asteroids,
+          numAsteroids: state.objetcs.numAsteroids - 1,
         },
       };
     default:

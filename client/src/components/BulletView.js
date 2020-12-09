@@ -5,10 +5,16 @@ class BulletView {
   constructor() {
     this.bullets = [];
   }
-  createBullet(dispatch, x, y, rotation) {
-    const GeneratedBullet = new Bullet(...gameState.bullet.params);
-    store.dispatch({ type: 'bullet', value: GeneratedBullet });
-    this.bullets.push();
+  createBullet(id, x, y, rotation) {
+    // not necessary to manually assign id here, can pull last id from store after dispatch
+    const GeneratedBullet = new Bullet(id, x, y, rotation);
+    store.dispatch({ type: 'createBullet', value: GeneratedBullet });
+    this.bullets.push(GeneratedBullet);
+  }
+  update() {
+    for (let bullet of this.bullets) {
+      bullet.update();
+    }
   }
 }
 

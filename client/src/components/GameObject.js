@@ -2,9 +2,11 @@ import { store } from './Store.js';
 
 // prototype class for all game objects
 class GameObject {
-  constructor(vertices, dimensions) {
+  constructor(id, vertices, dimensions) {
     const { context } = store.getState();
+    this.id = id;
     this.dimensions = dimensions;
+    this.maxDimension = Math.max(this.dimensions.width, this.dimensions.height);
     this.screenWidth = context.canvas.width;
     this.screenHeight = context.canvas.height;
     this.vertices = vertices;
@@ -13,12 +15,11 @@ class GameObject {
     // position of object
     this.position = { x: 0, y: 0 };
     // velocity of the object
-    this.velocity = { x: 1, y: 0 };
+    this.velocity = { x: 0, y: 0 };
   }
 
   update() {
-    debugger;
-    if (this.velocity.x > 0 || this.velocity.y > 0) {
+    if (this.velocity.x !== 0 || this.velocity.y !== 0) {
       this.translate(this.velocity.x, this.velocity.y);
     }
   }
@@ -32,11 +33,11 @@ class GameObject {
   translate(offsetX, offsetY) {
     let newPosX = this.position.x + offsetX;
     let newPosY = this.position.y + offsetY;
-    const maxDimension = Math.max(this.dimensions.width, this.dimensions.height);
-    if (newPosX - maxDimension > this.screenWidth) {
+
+    if (newPosX - this.maxDimension > this.screenWidth) {
       newPosX = 0;
     }
-    if (newPosY - maxDimension > this.screenHeight) {
+    if (newPosY - this.maxDimension > this.screenHeight) {
       newPosY = 0;
     }
     this.position = { x: newPosX, y: newPosY };
@@ -50,7 +51,6 @@ class GameObject {
   // renders the object using the CanvasRenderingContext2D interface
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
   render(context) {
-    debugger;
     // set the context's transformation matrix to identity
     context.setTransform();
     // rotate around origin
