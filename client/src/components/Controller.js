@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 class Controller {
   constructor() {
-    this.callbacks = { mousemove: [], keypress: [] };
+    this.callbacks = { mousemove: [], keypress: [], keydown: [], keyup: [] };
     /*
     $(window).on('mousedown', (e) => {
       e.stopImmediatePropagation();
@@ -41,11 +41,12 @@ class Controller {
   }
   addCallback(type, callback, keyCode) {
     this.callbacks[type].push(callback);
-    console.log(this.callbacks.mousemove.length);
+    console.log(this.callbacks);
     $(window).on(type, (e) => {
-      e.stopImmediatePropagation();
+      // e.stopImmediatePropagation();
       if (keyCode) {
         if (e.keyCode === keyCode) {
+          console.log(e.keyCode);
           callback(e);
         }
       } else {

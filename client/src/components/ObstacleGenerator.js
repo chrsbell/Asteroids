@@ -9,7 +9,6 @@ class ObstacleGenerator {
     let asteroid = new Asteroid(store.getState().numAsteroids);
     store.dispatch({ type: 'createAsteroid', value: asteroid });
     console.log(store.getState());
-    debugger;
   }
 }
 

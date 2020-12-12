@@ -18,7 +18,26 @@ class Ship extends GameObject {
     this.rotateToCursor = this.rotateToCursor.bind(this);
     Controller.addCallback('keypress', this.shoot, 32);
     Controller.addCallback('mousemove', this.rotateToCursor);
+    Controller.addCallback(
+      'keydown',
+      () => {
+        this.accelerate = true;
+      },
+      65
+    );
+    Controller.addCallback(
+      'keyup',
+      () => {
+        console.log('asdad');
+        this.accelerate = false;
+      },
+      65
+    );
     this.setAbsolutePosition(this.screenWidth / 2, this.screenHeight / 2);
+    this.acceleration = 0.99;
+    this.mass = 5;
+    this.maxVelocity = 2;
+    this.accelerate = false;
   }
 
   rotateToCursor(e) {
@@ -40,10 +59,21 @@ class Ship extends GameObject {
     this.rotate(Math.atan2(mouseY - this.position.y, mouseX - this.position.x) + Math.PI / 2);
   }
   update() {
-    super.update();
     this.bulletGenerator.update();
     // need to rotate the ship after each translation towards the mouse
     this.rotateToCursor();
+    if (this.accelerate) {
+      let vx = Math.cos(this.rotation - Math.PI / 2);
+      let vy = Math.sin(this.rotation - Math.PI / 2);
+      if (Math.abs(this.velocity.x + vx) < this.maxVelocity) {
+        this.velocity.x += vx;
+      }
+      if (Math.abs(this.velocity.y + vy) < this.maxVelocity) {
+        this.velocity.y += vy;
+      }
+      console.log(this.velocity);
+    }
+    super.update();
   }
   // shoot bullets in the direction of the cursor
   shoot() {

@@ -19,7 +19,12 @@ class GameObject {
   }
 
   update() {
-    if (this.velocity.x !== 0 || this.velocity.y !== 0) {
+    if (Math.abs(this.velocity) > 0.1 || Math.abs(this.velocity.y) > 0.1) {
+      // this isn't how acceleration works but good enough for now
+      if (this.acceleration) {
+        this.velocity.x *= this.acceleration;
+        this.velocity.y *= this.acceleration;
+      }
       this.translate(this.velocity.x, this.velocity.y);
     }
   }
